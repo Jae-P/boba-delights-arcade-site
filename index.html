@@ -162,7 +162,6 @@ a { color: inherit; text-decoration: none; }
 .order-buttons { margin-top:12px; display:flex; flex-direction:column; gap:10px; }
 .quick-form label { display:block; margin-bottom:8px; font-size:12px; }
 
-/* inputs */
 input,textarea {
   width:100%; border-radius:999px;
   border:1px solid rgba(187,210,223,0.96);
@@ -272,11 +271,11 @@ input:focus,textarea:focus {
 .slot-card li+li { margin-top:4px; }
 .rewards-note { font-size:12px; color:var(--text-muted); }
 
-/* contact */
+/* Contact & map */
 .contact-section { padding-bottom:32px; }
 .contact-grid {
   margin-top:18px;
-  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
   gap:18px;
 }
 .contact-card {
@@ -290,6 +289,10 @@ input:focus,textarea:focus {
   list-style:none; padding-left:0; margin:8px 0 0; font-size:13px;
 }
 .contact-links li+li { margin-top:4px; }
+.map-frame iframe {
+  width:100%; border:0; border-radius:18px;
+  min-height:220px;
+}
 
 .site-footer {
   border-top:1px solid rgba(205,225,236,0.96);
@@ -424,7 +427,7 @@ input:focus,textarea:focus {
       <a href="#menu">Menu</a>
       <a href="#order">Order</a>
       <a href="#rewards">Rewards</a>
-      <a href="#contact">Contact</a>
+      <a href="#contact">Visit</a>
     </nav>
     <a href="#order" class="btn primary header-cta">Order Now</a>
   </header>
@@ -470,18 +473,21 @@ input:focus,textarea:focus {
     <section id="order" class="section section-alt">
       <header class="section-header">
         <h3>Order Boba Delights</h3>
-        <p>Review your cart, then place your order online or in person.</p>
+        <p>Review your cart, then place your order online or send it directly to your email so you can confirm with the customer.</p>
       </header>
       <div class="order-grid">
         <div class="order-card">
           <h4>Order Online</h4>
-          <p>Use your favorite platform to order drinks and snacks.</p>
+          <p>Use your favorite platform to order drinks and snacks or send customers this link.</p>
           <div class="order-buttons">
             <a class="btn primary full" href="https://order.online/store/boba-delights-perris-24678055/?hideModal=true&pickup=true" target="_blank" rel="noopener">
               Order.Online (Pickup)
             </a>
             <a class="btn outline full" href="https://www.doordash.com/store/boba-delights-perris-24678055/" target="_blank" rel="noopener">
               DoorDash Delivery
+            </a>
+            <a class="btn outline full" href="https://www.paypal.com" target="_blank" rel="noopener">
+              Pay with PayPal (configure later)
             </a>
           </div>
         </div>
@@ -557,7 +563,7 @@ input:focus,textarea:focus {
     <section id="contact" class="section section-alt contact-section">
       <header class="section-header">
         <h3>Visit Boba Delights</h3>
-        <p>Located inside the () in Perris, CA.</p>
+        <p>Located inside Perris, CA.</p>
       </header>
       <div class="contact-grid">
         <div class="contact-card">
@@ -570,15 +576,20 @@ input:focus,textarea:focus {
             Mon–Sat · 11:00 am – 7:30 pm<br />
             (Hours may change on holidays)
           </p>
-        </div>
-        <div class="contact-card">
-          <h4>Stay Connected</h4>
-          <p>Follow Boba Delights for new flavors, limited drops and seasonal collabs.</p>
           <ul class="contact-links">
             <li><a href="https://bobadelights.com/" target="_blank" rel="noopener">Official Website</a></li>
-            <li><a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram https://www.instagram.com/boba_delights/</a></li>
-            <li><a href="mailto:info@bobadelights.com">info@bobadelights.com</a></li>
+            <li><a href="https://order.online/store/boba-delights-perris-24678055/?hideModal=true&pickup=true" target="_blank" rel="noopener">Order.Online</a></li>
+            <li><a href="https://www.doordash.com/store/boba-delights-perris-24678055/" target="_blank" rel="noopener">DoorDash</a></li>
           </ul>
+        </div>
+        <div class="contact-card map-frame">
+          <h4>Find us on the map</h4>
+          <iframe
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=22722+Harley+Knox+Blvd,+Perris,+CA+92570&output=embed">
+          </iframe>
         </div>
       </div>
     </section>
@@ -629,14 +640,18 @@ input:focus,textarea:focus {
           <span>Total:</span>
           <span id="cart-total">$0.00</span>
         </div>
-        <button class="btn primary full" id="cart-checkout-btn">Checkout / Order</button>
+        <button class="btn primary full" id="cart-checkout-btn">Send Order by Email</button>
         <p class="cart-note">
-          This cart is a demo. Later, you can connect it to your real checkout link, QR code
-          or POS system.
+          This cart is a demo. To receive real orders, replace
+          <code>YOUR-EMAIL-HERE@example.com</code> in the code with your own email,
+          or later connect it to a real checkout (PayPal, Stripe, POS, etc.).
         </p>
       </div>
     </div>
   </div>
+
+  <audio id="audio-spin" src="assets/audio/slot_spin.mp3"></audio>
+  <audio id="audio-jackpot" src="assets/audio/slot_jackpot.mp3"></audio>
 
   <script>
 
@@ -759,7 +774,7 @@ const MENU_ITEMS = [
     "name": "Beef Yakisoba",
     "price": "$6.50",
     "desc": "Stir fry noodles with beef, veggies and sauce.",
-    "image": "assets/menu/BobaDelight_Hero.jpg"
+    "image": "assets/menu/BobaDelight_Yakisoba.jpg"
   },
   {
     "id": "veggie-yakisoba",
@@ -767,7 +782,7 @@ const MENU_ITEMS = [
     "name": "Veggie Yakisoba",
     "price": "$6.00",
     "desc": "Stir fry noodles with veggies, no meat.",
-    "image": "assets/menu/BobaDelight_Hero.jpg"
+    "image": "assets/menu/BobaDelight_Yakisoba.jpg"
   },
   {
     "id": "takoyaki",
@@ -892,6 +907,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const cartCountEl = document.getElementById("cart-count");
   const cartItemsEl = document.getElementById("cart-items");
   const cartTotalEl = document.getElementById("cart-total");
+  const checkoutBtn = document.getElementById("cart-checkout-btn");
 
   const form = document.getElementById("quick-order-form");
   const resultEl = document.getElementById("quick-order-result");
@@ -903,6 +919,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const slotPointsEl = document.getElementById("slot-points");
   const slotMessageEl = document.getElementById("slot-message");
   const rewardsSummaryEl = document.getElementById("rewards-summary");
+
+  const audioSpin = document.getElementById("audio-spin");
+  const audioJackpot = document.getElementById("audio-jackpot");
 
   let currentModalId = null;
   let cart = [];
@@ -1095,6 +1114,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener("click", () => {
+      if (cart.length === 0) {
+        alert("Your cart is empty.");
+        return;
+      }
+      const lines = [];
+      lines.push("New Boba Delights order:");
+      cart.forEach((item) => {
+        lines.push(`- ${item.qty} x ${item.name} (${item.priceStr} each)`);
+      });
+      const total = cart.reduce((sum, item) => sum + item.lineTotal, 0);
+      lines.push("");
+      lines.push("Total: $" + total.toFixed(2));
+      lines.push("");
+      lines.push("Customer name:");
+      lines.push("Pickup or delivery?");
+      lines.push("Phone number:");
+      const body = encodeURIComponent(lines.join("\n"));
+      const mailto = "mailto:YOUR-EMAIL-HERE@example.com?subject=" + encodeURIComponent("New Boba Delights Order") + "&body=" + body;
+      window.location.href = mailto;
+    });
+  }
+
   if (form && resultEl) {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -1106,7 +1149,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (size) preview += ` · ${size}`;
       if (notes) preview += `. Notes: ${notes}`;
       resultEl.textContent =
-        preview + " — Later you can connect this to email, WhatsApp, or your POS system.";
+        preview + " — Later you can connect this to email, WhatsApp or your POS system.";
     });
   }
 
@@ -1145,18 +1188,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function spinResolve(finalSymbols) {
-    // Points from each symbol
     let roundPoints = 0;
     finalSymbols.forEach(sym => {
       roundPoints += sym.points || 0;
     });
 
-    // Count occurrences for combo bonuses
     const counts = finalSymbols.reduce((acc, sym) => {
       acc[sym.id] = (acc[sym.id] || 0) + 1;
       return acc;
     }, {});
-
     let maxCount = 0;
     Object.values(counts).forEach(v => {
       if (v > maxCount) maxCount = v;
@@ -1165,6 +1205,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (maxCount >= 6) {
       roundPoints += 300;
       setSlotMessage("JACKPOT! 6 matching icons. +300 bonus points.");
+      if (audioJackpot) audioJackpot.play();
     } else if (maxCount === 5) {
       roundPoints += 120;
       setSlotMessage("Amazing! 5 of a kind. +120 bonus points.");
@@ -1181,7 +1222,6 @@ document.addEventListener("DOMContentLoaded", () => {
       setSlotMessage("No match, but your points still climbed.");
     }
 
-    // Extra if any Delightful Escape card
     if (finalSymbols.some(sym => sym.id === "delightful")) {
       roundPoints += 40;
     }
@@ -1202,9 +1242,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (arcadeShell) arcadeShell.classList.add("spinning");
     setSlotMessage("Spinning...");
     spinCounter += 1;
+    if (audioSpin) {
+      audioSpin.currentTime = 0;
+      audioSpin.play().catch(() => {});
+    }
 
     let ticks = 0;
-    const maxTicks = 18; // longer spin
+    const maxTicks = 18;
     const interval = setInterval(() => {
       const animSymbols = Array.from({ length: 6 }, () => randomSymbol());
       updateArcadeDisplay(animSymbols);
@@ -1224,7 +1268,7 @@ document.addEventListener("DOMContentLoaded", () => {
     spinBtn.addEventListener("click", performSpin);
   }
 
-  // Initialize arcade reels with first 6 symbols
+  // Initialize arcade reels
   if (SLOT_SYMBOLS.length) {
     const initial = [];
     for (let i=0;i<6;i++) {
